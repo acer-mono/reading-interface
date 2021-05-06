@@ -1,24 +1,69 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import MainPage from './views/MainPage/MainPage';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import EntityListView from './views/EntityListView/EntityListView';
+import Header from './Header/Header';
+import api from './api';
 
 function App() {
+  const [users, setUsers] = useState([]);
+  const [rooms, setRooms] = useState([]);
+
+  useEffect(async () => {
+    api.users.get().then(items => setUsers(items));
+    api.rooms.get().then(items => setRooms(items));
+  }, []);
+
+  function deleteUserHandler(id) {
+    let isConfirmed = confirm('Удалить пользователя?');
+    if (isConfirmed) {
+      api.user
+        .delete(id)
+        .then(deletedItem => setUsers(users.filter(item => item.id !== deletedItem.id)));
+    }
+  }
+
+  function deleteRoomHandler(id) {
+    let isConfirmed = confirm('Удалить помещение?');
+    if (isConfirmed) {
+      api.room
+        .delete(id)
+        .then(deletedItem => setUsers(users.filter(item => item.id !== deletedItem.id)));
+    }
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Header />
+      <Switch>
+        <Route exact path="/" component={MainPage} />
+        <Route
+          exact
+          path="/users"
+          component={() => (
+            <EntityListView
+              items={users}
+              fieldForSearching="login"
+              title="Пользователи"
+              deleteHandler={deleteUserHandler}
+            />
+          )}
+        />
+        <Route
+          exact
+          path="/rooms"
+          component={() => (
+            <EntityListView
+              items={rooms}
+              fieldForSearching="name"
+              title="Помещения"
+              deleteHandler={deleteRoomHandler}
+            />
+          )}
+        />
+      </Switch>
+    </Router>
   );
 }
 

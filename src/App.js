@@ -29,15 +29,49 @@ function App() {
     if (isConfirmed) {
       api.room
         .delete(id)
-        .then(deletedItem => setUsers(users.filter(item => item.id !== deletedItem.id)));
+        .then(deletedItem => setRooms(rooms.filter(item => item.id !== deletedItem.id)));
     }
+  }
+
+  function updateUserHandler(user) {
+    setUsers(
+      users.map(u => {
+        if (u.id === user.id) {
+          u.login = user.login;
+          u.password = user.password;
+          u.isAdmin = user.isAdmin;
+        }
+        return u;
+      })
+    );
+  }
+
+  function updateRoomHandler(room) {
+    setRooms(
+      rooms.map(r => {
+        if (r.id === room.id) {
+          r.name = room.name;
+        }
+        return r;
+      })
+    );
+  }
+
+  function addUserHandler(user) {
+    users.push(user);
+    setUsers([...users]);
+  }
+
+  function addRoomHandler(room) {
+    rooms.push(room);
+    setUsers([...rooms]);
   }
 
   return (
     <Router>
-      <Header />
+      <Header addUserHandler={addUserHandler} addRoomHandler={addRoomHandler} />
       <Switch>
-        <Route exact path="/" component={MainPage} />
+        <Route exact path="/" component={() => <MainPage rooms={rooms} />} />
         <Route
           exact
           path="/users"
@@ -47,6 +81,7 @@ function App() {
               fieldForSearching="login"
               title="Пользователи"
               deleteHandler={deleteUserHandler}
+              updateHandler={updateUserHandler}
             />
           )}
         />
@@ -59,6 +94,7 @@ function App() {
               fieldForSearching="name"
               title="Помещения"
               deleteHandler={deleteRoomHandler}
+              updateHandler={updateRoomHandler}
             />
           )}
         />

@@ -2,7 +2,7 @@ import React from 'react';
 import Entity from '../Entity/Entity';
 import { List, Typography } from '@material-ui/core';
 
-function EntityList({ items, fieldForRendering, deleteHandler }) {
+function EntityList({ items, fieldForRendering, deleteHandler, updateHandler }) {
   if (items.length === 0) {
     return (
       <Typography variant="body1" align="center">
@@ -18,6 +18,7 @@ function EntityList({ items, fieldForRendering, deleteHandler }) {
             key={item.id}
             fieldForRendering={fieldForRendering}
             deleteHandler={deleteHandler}
+            updateHandler={updateHandler}
           />
         ))}
       </List>

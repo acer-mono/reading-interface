@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function EntityListView({ items, fieldForSearching, title, deleteHandler }) {
+function EntityListView({ items, fieldForSearching, title, deleteHandler, updateHandler }) {
   const classes = useStyles();
   const [filter, changeFilter] = useState('');
 
@@ -42,6 +42,7 @@ function EntityListView({ items, fieldForSearching, title, deleteHandler }) {
             items={items.filter(el => el[fieldForSearching].includes(filter))}
             fieldForRendering={fieldForSearching}
             deleteHandler={deleteHandler}
+            updateHandler={updateHandler}
           />
         </Paper>
       </main>

@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Typography, Paper, Stepper, StepLabel, Step, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import CurrentReadingView from '../CurrentReadingView/CurrentReadingView';
 import ChooseRoomView from '../ChooseRoomView/ChooseRoomView';
+import api from '../../api';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   layout: {
-    width: 'auto'
+    width: 'auto',
+    [theme.breakpoints.up(900 + theme.spacing(2) * 2)]: {
+      width: 900,
+      marginLeft: 'auto',
+      marginRight: 'auto'
+    }
   },
   paper: {
     marginTop: theme.spacing(3),
@@ -28,30 +35,103 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <ChooseRoomView />;
-    case 1:
-      return <CurrentReadingView />;
-    default:
-      throw new Error('Unknown step');
-  }
-}
-
-function MainPage() {
+function MainPage({ rooms }) {
   const classes = useStyles();
   const steps = ['Выбор помещения', 'Ввод данных'];
+  const [roomId, setRoomId] = useState('');
+  const [current, setCurrent] = useState(undefined);
+  const [temperature, setTemperature] = useState([]);
+  const [humidity, setHumidity] = useState([]);
 
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
+    console.log(roomId);
+    api.reading
+      .get(roomId)
+      .then(reading => {
+        setCurrent(reading);
+      })
+      .catch(() => {
+        setCurrent(undefined);
+      })
+      .finally(() => {
+        api.readings.get(roomId, new Date() - 7, new Date()).then(readings => {
+          setTemperature(
+            readings.map(reading => {
+              return {
+                date: moment(reading.date).format('DD.MM'),
+                temperature: reading.temperature
+              };
+            })
+          );
+          setHumidity(
+            readings.map(reading => {
+              return { date: moment(reading.date).format('DD.MM'), humidity: reading.humidity };
+            })
+          );
+        });
+        setActiveStep(activeStep + 1);
+      });
   };
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
+
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return (
+          <ChooseRoomView
+            rooms={rooms}
+            setRoomHandler={room => {
+              setRoomId(room.target.value);
+              setCurrent(undefined);
+            }}
+          />
+        );
+      case 1:
+        return (
+          <CurrentReadingView
+            reading={current}
+            room={roomId}
+            updateReading={value => setCurrent(value)}
+            temperature={temperature}
+            humidity={humidity}
+            updateReadingList={(value, isUpdate) => {
+              if (isUpdate) {
+                const currentDay = moment(current.date).format('DD.MM');
+                setHumidity(
+                  humidity.map(el => {
+                    if (el.date === currentDay) {
+                      el.humidity = value.humidity;
+                    }
+                    return el;
+                  })
+                );
+                setTemperature(
+                  temperature.map(el => {
+                    if (el.date === currentDay) {
+                      el.temperature = value.temperature;
+                    }
+                    return el;
+                  })
+                );
+              } else {
+                const currentDay = moment(new Date()).format('DD.MM');
+                humidity.push({ date: currentDay, humidity: value.humidity });
+                setHumidity([...humidity]);
+                temperature.push({ date: currentDay, temperature: value.temperature });
+                setTemperature([...temperature]);
+              }
+            }}
+          />
+        );
+      default:
+        throw new Error('Unknown step');
+    }
+  }
 
   return (
     <>
@@ -87,7 +167,7 @@ function MainPage() {
                       Назад
                     </Button>
                   )}
-                  {activeStep === 0 && (
+                  {activeStep === 0 && roomId && (
                     <Button
                       variant="contained"
                       color="primary"

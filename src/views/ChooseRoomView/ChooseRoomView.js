@@ -1,15 +1,17 @@
 import React from 'react';
 import { FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 
-function ChooseRoomView() {
+function ChooseRoomView({ rooms, setRoomHandler }) {
   return (
     <>
       <FormControl variant="outlined" fullWidth>
         <InputLabel id="room-label">Помещение</InputLabel>
-        <Select labelId="room-label" id="Room" label="Помещение">
-          <MenuItem value={1}>Хранилище №1</MenuItem>
-          <MenuItem value={2}>Хранилище №2</MenuItem>
-          <MenuItem value={3}>Хранилище №3</MenuItem>
+        <Select labelId="room-label" id="Room" label="Помещение" onChange={setRoomHandler}>
+          {rooms.map(room => (
+            <MenuItem key={room.id} value={room.id}>
+              {room.name}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
     </>

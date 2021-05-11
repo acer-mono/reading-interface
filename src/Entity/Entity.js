@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ListItem,
   ListItemText,
@@ -10,10 +10,31 @@ import {
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import PersonIcon from '@material-ui/icons/Person';
+import UserForm from '../UserForm/UserForm';
+import RoomForm from '../RoomForm/RoomForm';
 
-function Entity({ item, fieldForRendering, deleteHandler }) {
+function Entity({ item, fieldForRendering, deleteHandler, updateHandler }) {
+  const [open, setOpen] = useState();
   return (
     <ListItem>
+      {fieldForRendering === 'login' && (
+        <UserForm
+          isCreation={false}
+          user={item}
+          open={open}
+          changeHandler={value => setOpen(value)}
+          updateHandler={updateHandler}
+        />
+      )}
+      {fieldForRendering === 'name' && (
+        <RoomForm
+          isCreation={false}
+          room={item}
+          open={open}
+          changeHandler={value => setOpen(value)}
+          updateHandler={updateHandler}
+        />
+      )}
       <ListItemAvatar>
         <Avatar>
           <PersonIcon />
@@ -21,7 +42,7 @@ function Entity({ item, fieldForRendering, deleteHandler }) {
       </ListItemAvatar>
       <ListItemText primary={item[fieldForRendering]} />
       <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="delete">
+        <IconButton edge="end" aria-label="delete" onClick={() => setOpen(true)}>
           <EditIcon />
         </IconButton>
         <IconButton edge="end" aria-label="delete" onClick={() => deleteHandler(item.id)}>

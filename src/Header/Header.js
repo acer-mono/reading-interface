@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function Header() {
+function Header({ addUserHandler, addRoomHandler }) {
   const classes = useStyles();
   const history = useHistory();
   const [print, setPrint] = React.useState(null);
@@ -102,12 +102,14 @@ function Header() {
             isCreation={true}
             open={userCreation}
             changeHandler={value => setUserCreation(value)}
+            addHandler={addUserHandler}
           />
           <MenuItem onClick={handleClickRoomCreation}>Помещение</MenuItem>
           <RoomForm
             isCreation={true}
             open={roomCreation}
             changeHandler={value => setRoomCreation(value)}
+            addHandler={addRoomHandler}
           />
         </Menu>
         <Button

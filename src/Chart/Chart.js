@@ -10,29 +10,13 @@ const useStyles = makeStyles({
   }
 });
 
-function createData(time, amount) {
-  return { time, amount };
-}
-
-const data = [
-  createData('01.05', 0),
-  createData('02.05', 23),
-  createData('03.05', 10),
-  createData('04.05', 33),
-  createData('05.05', 10),
-  createData('06.05', 23),
-  createData('07.05', 11),
-  createData('08.05', 5),
-  createData('09.05', undefined)
-];
-
-export default function Chart() {
+export default function Chart({ data, title, axisName, yAxis }) {
   const theme = useTheme();
   const classes = useStyles();
 
   return (
     <Card className={classes.custom}>
-      <CardHeader titleTypographyProps={{ color: 'primary' }} title="Температура" />
+      <CardHeader titleTypographyProps={{ color: 'primary' }} title={title} />
       <CardContent>
         <ResponsiveContainer width="100%" height={260}>
           <LineChart
@@ -44,17 +28,17 @@ export default function Chart() {
               left: 24
             }}
           >
-            <XAxis dataKey="time" stroke={theme.palette.text.secondary} />
+            <XAxis dataKey="date" stroke={theme.palette.text.secondary} />
             <YAxis stroke={theme.palette.text.secondary}>
               <Label
                 angle={270}
                 position="left"
                 style={{ textAnchor: 'middle', fill: theme.palette.text.primary }}
               >
-                Температура (℃)
+                {axisName}
               </Label>
             </YAxis>
-            <Line type="monotone" dataKey="amount" stroke={theme.palette.primary.main} dot={true} />
+            <Line type="monotone" dataKey={yAxis} stroke={theme.palette.primary.main} dot={true} />
           </LineChart>
         </ResponsiveContainer>
       </CardContent>

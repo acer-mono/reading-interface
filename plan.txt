@@ -1,0 +1,11 @@
+slices:
+*users
+*rooms
+*current???
+
+jwt-token:
+*save in cookies???
+
+roomsSlice:
+*list
+*error

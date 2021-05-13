@@ -5,14 +5,17 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import EntityListView from './views/EntityListView/EntityListView';
 import Header from './Header/Header';
 import api from './api';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadAsync, removeAsync } from './redux/actions/rooms';
 
 function App() {
   const [users, setUsers] = useState([]);
-  const [rooms, setRooms] = useState([]);
+  const [, setRooms] = useState([]);
+  const dispatch = useDispatch();
+  const rooms = useSelector(store => store.rooms.list);
 
   useEffect(async () => {
-    api.users.get().then(items => setUsers(items));
-    api.rooms.get().then(items => setRooms(items));
+    dispatch(loadAsync());
   }, []);
 
   function deleteUserHandler(id) {
@@ -21,15 +24,6 @@ function App() {
       api.user
         .delete(id)
         .then(deletedItem => setUsers(users.filter(item => item.id !== deletedItem.id)));
-    }
-  }
-
-  function deleteRoomHandler(id) {
-    let isConfirmed = confirm('Удалить помещение?');
-    if (isConfirmed) {
-      api.room
-        .delete(id)
-        .then(deletedItem => setRooms(rooms.filter(item => item.id !== deletedItem.id)));
     }
   }
 
@@ -93,7 +87,7 @@ function App() {
               items={rooms}
               fieldForSearching="name"
               title="Помещения"
-              deleteHandler={deleteRoomHandler}
+              deleteHandler={id => dispatch(removeAsync(id))}
               updateHandler={updateRoomHandler}
             />
           )}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -8,8 +8,9 @@ import { TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import api from '../api';
 import Alert from '@material-ui/lab/Alert';
+import { useDispatch, useSelector } from 'react-redux';
+import { addAsync, editAsync } from '../redux/actions/rooms';
 
 const useStyles = makeStyles(theme => ({
   buttons: {
@@ -24,8 +25,9 @@ const validationSchema = yup.object({
   name: yup.string('Введите название помещения').required('Название не может быт пустым')
 });
 
-function RoomForm({ open, isCreation, room, changeHandler, addHandler, updateHandler }) {
-  const [error, setError] = useState('');
+function RoomForm({ open, isCreation, room, changeHandler }) {
+  const dispatch = useDispatch();
+  const error = useSelector(store => store.rooms.error);
   const styles = useStyles();
   const formik = useFormik({
     initialValues: {
@@ -33,27 +35,13 @@ function RoomForm({ open, isCreation, room, changeHandler, addHandler, updateHan
     },
     validationSchema: validationSchema,
     onSubmit: values => {
-      setError('');
       if (isCreation) {
-        api.room
-          .post(values.name)
-          .then(room => {
-            addHandler(room);
-            changeHandler(false);
-          })
-          .catch(e => {
-            setError(e.message);
-          });
+        dispatch(addAsync(values.name));
       } else {
-        api.room
-          .put({ id: room.id, ...values })
-          .then(user => {
-            updateHandler(user);
-            changeHandler(false);
-          })
-          .catch(e => {
-            setError(e.message);
-          });
+        dispatch(editAsync({ id: room.id, name: values.name }));
+      }
+      if (!useSelector(store => store.rooms.error)) {
+        changeHandler();
       }
     }
   });

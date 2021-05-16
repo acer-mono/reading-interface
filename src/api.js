@@ -1,9 +1,15 @@
 const URL = 'https://vki.pythonanywhere.com';
+
 const defaultHeaders = {
   'Content-Type': 'application/json',
   Authorization:
-    'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyMDM3NzE5OSwianRpIjoiZGNiNzA2MTQtZGVjZS00MzgxLWE4NmUtNTg3ZmQ2M2Q4YWYzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2MjAzNzcxOTksImV4cCI6MTYyMDk4MTk5OX0.uEOnjKZEakUqd_0xsxzeqpDVA7mFDvP_fvYeXIixGu4'
+    'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyMTA2OTM3MiwianRpIjoiMjFhMTI1MGEtZDFlOC00OTc2LWIwMjQtYWNmZTMwNzM5YjNkIiwibmJmIjoxNjIxMDY5MzcyLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoiNCIsImV4cCI6MTYyMTY3NDE3Mn0.h1v4dYEWlRxi61c8ijBzjrgvbbK0JrNQ8eZFN0dcvK8'
 };
+const plotHeaders = {
+  Authorization:
+    'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyMTA2OTM3MiwianRpIjoiMjFhMTI1MGEtZDFlOC00OTc2LWIwMjQtYWNmZTMwNzM5YjNkIiwibmJmIjoxNjIxMDY5MzcyLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoiNCIsImV4cCI6MTYyMTY3NDE3Mn0.h1v4dYEWlRxi61c8ijBzjrgvbbK0JrNQ8eZFN0dcvK8'
+};
+
 async function handleErrors(response) {
   const data = await response.json();
   if (response.status !== 200) {
@@ -11,6 +17,15 @@ async function handleErrors(response) {
   }
   return data;
 }
+
+async function handleBinaryFilesErrors(response) {
+  const data = await response;
+  if (response.status !== 200) {
+    throw new Error(data.message);
+  }
+  return data;
+}
+
 const api = {
   users: {
     get: () =>
@@ -119,6 +134,23 @@ const api = {
         method: 'GET',
         headers: defaultHeaders
       }).then(handleErrors)
+  },
+  plot: {
+    get: ({ from, to, room, type }) =>
+      fetch(`${URL}/plot?from=${from}&to=${to}&room=${room}&type=${type}`, {
+        method: 'GET',
+        headers: plotHeaders
+      }).then(handleBinaryFilesErrors)
+  },
+  table: {
+    get: ({ format, from, to, room }) =>
+      fetch(
+        `${URL}/table?from=${from.toLocaleDateString()}&to=${to.toLocaleDateString()}&room=${room}&format=${format}`,
+        {
+          method: 'GET',
+          headers: plotHeaders
+        }
+      ).then(handleBinaryFilesErrors)
   }
 };
 

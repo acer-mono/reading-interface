@@ -11,7 +11,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import api from '../api';
+import { useDispatch } from 'react-redux';
+import { addAsync, editAsync } from '../redux/actions/users';
 
 const validationSchema = yup.object({
   login: yup.string('Введите логин').required('Логин обязателен'),
@@ -31,9 +32,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function UserForm({ open, changeHandler, isCreation, user, updateHandler, addHandler }) {
+function UserForm({ open, changeHandler, isCreation, user }) {
   const [error, setError] = useState('');
   const styles = useStyles();
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
       login: user ? user.login : '',
@@ -44,25 +46,9 @@ function UserForm({ open, changeHandler, isCreation, user, updateHandler, addHan
     onSubmit: values => {
       setError('');
       if (isCreation) {
-        api.user
-          .post(values)
-          .then(user => {
-            addHandler(user);
-            changeHandler(false);
-          })
-          .catch(e => {
-            setError(e.message);
-          });
+        dispatch(addAsync({ ...values }));
       } else {
-        api.user
-          .put({ id: user.id, ...values })
-          .then(user => {
-            updateHandler(user);
-            changeHandler(false);
-          })
-          .catch(e => {
-            setError(e.message);
-          });
+        dispatch(editAsync({ id: user.id, ...values }));
       }
     }
   });

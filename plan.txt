@@ -9,3 +9,7 @@ jwt-token:
 roomsSlice:
 *list
 *error
+
+usersSlice:
+*list
+*error

@@ -137,10 +137,15 @@ const api = {
   },
   plot: {
     get: ({ from, to, room, type }) =>
-      fetch(`${URL}/plot?from=${from}&to=${to}&room=${room}&type=${type}`, {
-        method: 'GET',
-        headers: plotHeaders
-      }).then(handleBinaryFilesErrors)
+      fetch(
+        `${URL}/plot?from=${from.toISOString().split('T')[0]}&to=${
+          to.toISOString().split('T')[0]
+        }&room=${room}&type=${type}`,
+        {
+          method: 'GET',
+          headers: plotHeaders
+        }
+      ).then(handleBinaryFilesErrors)
   },
   table: {
     get: ({ format, from, to, room }) =>

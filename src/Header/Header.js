@@ -7,6 +7,16 @@ import UserForm from '../UserForm/UserForm';
 import RoomForm from '../RoomForm/RoomForm';
 import { useHistory } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  setCreate,
+  setEdit,
+  setPlotStatus,
+  setPrint,
+  setRoomStatus,
+  setTableStatus,
+  setUserStatus
+} from '../redux/actions/status';
 
 const useStyles = makeStyles(() => ({
   appBar: {
@@ -21,35 +31,30 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function Header({ addUserHandler, addRoomHandler }) {
+function Header() {
   const classes = useStyles();
   const history = useHistory();
-  const [print, setPrint] = React.useState(null);
-  const [create, setCreate] = React.useState(null);
-  const [edit, setEdit] = React.useState(null);
-  const [openPrintPlot, setOpenPrintPlot] = React.useState(false);
-  const [openPrintTable, setOpenPrintTable] = React.useState(false);
-  const [userCreation, setUserCreation] = React.useState(false);
-  const [roomCreation, setRoomCreation] = React.useState(false);
+  const dispatch = useDispatch();
+  const status = useSelector(store => store.status);
 
   const handleClickOpenPrintPlot = () => {
-    setPrint(null);
-    setOpenPrintPlot(true);
+    dispatch(setPrint(null));
+    dispatch(setPlotStatus(true));
   };
 
   const handleClickOpenPrintTable = () => {
-    setPrint(null);
-    setOpenPrintTable(true);
+    dispatch(setPrint(null));
+    dispatch(setTableStatus(true));
   };
 
   const handleClickUserCreation = () => {
-    setCreate(null);
-    setUserCreation(true);
+    dispatch(setCreate(null));
+    dispatch(setUserStatus(true));
   };
 
   const handleClickRoomCreation = () => {
-    setCreate(null);
-    setRoomCreation(true);
+    dispatch(setCreate(null));
+    dispatch(setRoomStatus(true));
   };
 
   return (
@@ -73,12 +78,12 @@ function Header({ addUserHandler, addRoomHandler }) {
           anchorEl={print}
           keepMounted
           open={Boolean(print)}
-          onClose={() => setPrint(null)}
+          onClose={() => dispatch(setPrint(null))}
         >
           <MenuItem onClick={handleClickOpenPrintTable}>Таблица</MenuItem>
-          <PrintTable open={openPrintTable} changeState={value => setOpenPrintTable(value)} />
+          <PrintTable open={status.table} changeState={value => dispatch(setTableStatus(value))} />
           <MenuItem onClick={handleClickOpenPrintPlot}>График</MenuItem>
-          <PrintPlot open={openPrintPlot} changeState={value => setOpenPrintPlot(value)} />
+          <PrintPlot open={status.plot} changeState={value => dispatch(setPlotStatus(value))} />
         </Menu>
         <Button
           classes={{
@@ -86,30 +91,28 @@ function Header({ addUserHandler, addRoomHandler }) {
           }}
           aria-controls="simple-menu"
           aria-haspopup="true"
-          onClick={event => setCreate(event.currentTarget)}
+          onClick={event => dispatch(setCreate(event.currentTarget))}
         >
           Создание
         </Button>
         <Menu
           id="simple-menu"
-          anchorEl={create}
+          anchorEl={status.create}
           keepMounted
-          open={Boolean(create)}
+          open={Boolean(status.create)}
           onClose={() => setCreate(null)}
         >
           <MenuItem onClick={handleClickUserCreation}>Пользователь</MenuItem>
           <UserForm
             isCreation={true}
-            open={userCreation}
-            changeHandler={value => setUserCreation(value)}
-            addHandler={addUserHandler}
+            open={status.user}
+            changeHandler={value => dispatch(setUserStatus(value))}
           />
           <MenuItem onClick={handleClickRoomCreation}>Помещение</MenuItem>
           <RoomForm
             isCreation={true}
-            open={roomCreation}
-            changeHandler={value => setRoomCreation(value)}
-            addHandler={addRoomHandler}
+            open={status.room}
+            changeHandler={value => dispatch(setRoomStatus(value))}
           />
         </Menu>
         <Button
@@ -124,10 +127,10 @@ function Header({ addUserHandler, addRoomHandler }) {
         </Button>
         <Menu
           id="simple-menu"
-          anchorEl={edit}
+          anchorEl={status.edit}
           keepMounted
-          open={Boolean(edit)}
-          onClose={() => setEdit(null)}
+          open={Boolean(status.edit)}
+          onClose={() => dispatch(setEdit(null))}
         >
           <MenuItem
             onClick={useCallback(() => {

@@ -1,4 +1,4 @@
-const URL = 'https://vki.pythonanywhere.com';
+const URL = 'http://127.0.0.1:5000';
 
 const defaultHeaders = {
   'Content-Type': 'application/json',
@@ -156,6 +156,17 @@ const api = {
           headers: plotHeaders
         }
       ).then(handleBinaryFilesErrors)
+  },
+  auth: {
+    post: ({ login, password }) =>
+      fetch(`${URL}/auth`, {
+        method: 'POST',
+        headers: defaultHeaders,
+        body: JSON.stringify({
+          login,
+          password
+        })
+      }).then(handleErrors)
   }
 };
 

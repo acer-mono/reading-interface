@@ -15,6 +15,7 @@ import {
   edit as roomEdit,
   removeAsync as usersRemoveAsync
 } from './redux/actions/users';
+import LoginForm from './LoginForm/LoginForm';
 
 function App() {
   const dispatch = useDispatch();
@@ -28,8 +29,9 @@ function App() {
 
   return (
     <Router>
-      <Header />
       <Switch>
+        <Route exact path="/login" component={() => <LoginForm />} />
+        <Header />
         <Route exact path="/" component={() => <MainPage rooms={rooms} />} />
         <Route
           exact

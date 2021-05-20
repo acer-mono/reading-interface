@@ -1,7 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FingerprintIcon from '@material-ui/icons/Fingerprint';
 import { Avatar, Typography, TextField, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+import Alert from '@material-ui/lab/Alert';
+import api from '../api';
+
+const validationSchema = yup.object({
+  login: yup.string('Введите логин').required('Логин обязателен'),
+  password: yup
+    .string('Введите пароль')
+    .min(8, 'Минимальная длина пароля - 8 символов')
+    .required('Пароль обязателен')
+});
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -25,6 +37,26 @@ const useStyles = makeStyles(theme => ({
 
 function LoginForm() {
   const classes = useStyles();
+  const [error, setError] = useState('');
+
+  const formik = useFormik({
+    initialValues: {
+      login: '',
+      password: ''
+    },
+    validationSchema: validationSchema,
+    onSubmit: async values => {
+      setError('');
+      console.log(values);
+      try {
+        const data = await api.auth.post(values);
+        console.log(data);
+      } catch (e) {
+        setError(e.message);
+      }
+    }
+  });
+
   return (
     <div className={classes.paper}>
       <Avatar className={classes.avatar}>
@@ -33,7 +65,8 @@ function LoginForm() {
       <Typography component="h1" variant="h5">
         Вход в систему
       </Typography>
-      <form noValidate>
+      {error && <Alert severity="error">{error}</Alert>}
+      <form noValidate onSubmit={formik.handleSubmit}>
         <TextField
           variant="outlined"
           margin="normal"
@@ -43,6 +76,10 @@ function LoginForm() {
           label="Логин"
           name="login"
           autoComplete="login"
+          value={formik.values.login}
+          onChange={formik.handleChange}
+          error={formik.touched.login && Boolean(formik.errors.login)}
+          helperText={formik.touched.login && formik.errors.login}
           autoFocus
         />
         <TextField
@@ -54,6 +91,10 @@ function LoginForm() {
           label="Пароль"
           type="password"
           id="password"
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          error={formik.touched.password && Boolean(formik.errors.password)}
+          helperText={formik.touched.password && formik.errors.password}
           autoComplete="current-password"
         />
         <Button

@@ -35,7 +35,7 @@ function Header() {
   const classes = useStyles();
   const history = useHistory();
   const dispatch = useDispatch();
-  const status = useSelector(store => store.status);
+  const { room, user, table, plot, create, print, edit } = useSelector(store => store.status);
 
   const handleClickOpenPrintPlot = () => {
     dispatch(setPrint(null));
@@ -69,7 +69,7 @@ function Header() {
           }}
           aria-controls="simple-menu"
           aria-haspopup="true"
-          onClick={event => setPrint(event.currentTarget)}
+          onClick={event => dispatch(setPrint(event.currentTarget))}
         >
           Печать
         </Button>
@@ -81,9 +81,9 @@ function Header() {
           onClose={() => dispatch(setPrint(null))}
         >
           <MenuItem onClick={handleClickOpenPrintTable}>Таблица</MenuItem>
-          <PrintTable open={status.table} changeState={value => dispatch(setTableStatus(value))} />
+          <PrintTable open={table} changeState={value => dispatch(setTableStatus(value))} />
           <MenuItem onClick={handleClickOpenPrintPlot}>График</MenuItem>
-          <PrintPlot open={status.plot} changeState={value => dispatch(setPlotStatus(value))} />
+          <PrintPlot open={plot} changeState={value => dispatch(setPlotStatus(value))} />
         </Menu>
         <Button
           classes={{
@@ -97,21 +97,21 @@ function Header() {
         </Button>
         <Menu
           id="simple-menu"
-          anchorEl={status.create}
+          anchorEl={create}
           keepMounted
-          open={Boolean(status.create)}
-          onClose={() => setCreate(null)}
+          open={Boolean(create)}
+          onClose={() => dispatch(setCreate(null))}
         >
           <MenuItem onClick={handleClickUserCreation}>Пользователь</MenuItem>
           <UserForm
             isCreation={true}
-            open={status.user}
+            open={user}
             changeHandler={value => dispatch(setUserStatus(value))}
           />
           <MenuItem onClick={handleClickRoomCreation}>Помещение</MenuItem>
           <RoomForm
             isCreation={true}
-            open={status.room}
+            open={room}
             changeHandler={value => dispatch(setRoomStatus(value))}
           />
         </Menu>
@@ -121,20 +121,20 @@ function Header() {
           }}
           aria-controls="simple-menu"
           aria-haspopup="true"
-          onClick={event => setEdit(event.currentTarget)}
+          onClick={event => dispatch(setEdit(event.currentTarget))}
         >
           Редактирование
         </Button>
         <Menu
           id="simple-menu"
-          anchorEl={status.edit}
+          anchorEl={edit}
           keepMounted
-          open={Boolean(status.edit)}
+          open={Boolean(edit)}
           onClose={() => dispatch(setEdit(null))}
         >
           <MenuItem
             onClick={useCallback(() => {
-              setEdit(null);
+              dispatch(setEdit(null));
               history.push('/users');
             }, [history])}
           >
@@ -142,7 +142,7 @@ function Header() {
           </MenuItem>
           <MenuItem
             onClick={useCallback(() => {
-              setEdit(null);
+              dispatch(setEdit(null));
               history.push('/rooms');
             }, [history])}
           >

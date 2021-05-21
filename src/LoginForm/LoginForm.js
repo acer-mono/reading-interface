@@ -6,6 +6,8 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Alert from '@material-ui/lab/Alert';
 import api from '../api';
+import { login } from '../auth';
+import { useHistory } from 'react-router-dom';
 
 const validationSchema = yup.object({
   login: yup.string('Введите логин').required('Логин обязателен'),
@@ -38,6 +40,7 @@ const useStyles = makeStyles(theme => ({
 function LoginForm() {
   const classes = useStyles();
   const [error, setError] = useState('');
+  const history = useHistory();
 
   const formik = useFormik({
     initialValues: {
@@ -47,10 +50,14 @@ function LoginForm() {
     validationSchema: validationSchema,
     onSubmit: async values => {
       setError('');
-      console.log(values);
       try {
         const data = await api.auth.post(values);
-        console.log(data);
+        if (data.access_token) {
+          login(data);
+          history.push('/');
+        } else {
+          setError('Please type in correct username/password');
+        }
       } catch (e) {
         setError(e.message);
       }

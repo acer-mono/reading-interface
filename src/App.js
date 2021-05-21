@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './App.css';
 import MainPage from './views/MainPage/MainPage';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import EntityListView from './views/EntityListView/EntityListView';
 import Header from './Header/Header';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,6 +16,7 @@ import {
   removeAsync as usersRemoveAsync
 } from './redux/actions/users';
 import LoginForm from './LoginForm/LoginForm';
+import { useAuth } from './auth';
 
 function App() {
   const dispatch = useDispatch();
@@ -31,13 +32,17 @@ function App() {
     <Router>
       <Switch>
         <Route exact path="/login" component={() => <LoginForm />} />
-        <Header />
-        <Route exact path="/" component={() => <MainPage rooms={rooms} />} />
-        <Route
+        <PrivateRoute
+          exact
+          path="/"
+          component={() => <HeaderWrapper component={MainPage} rooms={rooms} />}
+        />
+        <PrivateRoute
           exact
           path="/users"
           component={() => (
-            <EntityListView
+            <HeaderWrapper
+              component={EntityListView}
               items={users}
               fieldForSearching="login"
               title="Пользователи"
@@ -46,11 +51,12 @@ function App() {
             />
           )}
         />
-        <Route
+        <PrivateRoute
           exact
           path="/rooms"
           component={() => (
-            <EntityListView
+            <HeaderWrapper
+              component={EntityListView}
               items={rooms}
               fieldForSearching="name"
               title="Помещения"
@@ -63,5 +69,30 @@ function App() {
     </Router>
   );
 }
+
+export const PrivateRoute = ({ component: Component, ...rest }) => {
+  const [logged] = useAuth();
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        logged ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+        )
+      }
+    />
+  );
+};
+
+export const HeaderWrapper = ({ component: Component, ...props }) => {
+  return (
+    <>
+      <Header />
+      <Component {...props} />
+    </>
+  );
+};
 
 export default App;

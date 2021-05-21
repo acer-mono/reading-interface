@@ -1,13 +1,9 @@
-const URL = 'http://127.0.0.1:5000';
+import { authFetch } from './auth';
+
+const URL = 'http://localhost:5000';
 
 const defaultHeaders = {
-  'Content-Type': 'application/json',
-  Authorization:
-    'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyMTA2OTM3MiwianRpIjoiMjFhMTI1MGEtZDFlOC00OTc2LWIwMjQtYWNmZTMwNzM5YjNkIiwibmJmIjoxNjIxMDY5MzcyLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoiNCIsImV4cCI6MTYyMTY3NDE3Mn0.h1v4dYEWlRxi61c8ijBzjrgvbbK0JrNQ8eZFN0dcvK8'
-};
-const plotHeaders = {
-  Authorization:
-    'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyMTA2OTM3MiwianRpIjoiMjFhMTI1MGEtZDFlOC00OTc2LWIwMjQtYWNmZTMwNzM5YjNkIiwibmJmIjoxNjIxMDY5MzcyLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoiNCIsImV4cCI6MTYyMTY3NDE3Mn0.h1v4dYEWlRxi61c8ijBzjrgvbbK0JrNQ8eZFN0dcvK8'
+  'Content-Type': 'application/json'
 };
 
 async function handleErrors(response) {
@@ -29,7 +25,7 @@ async function handleBinaryFilesErrors(response) {
 const api = {
   users: {
     get: () =>
-      fetch(`${URL}/users`, {
+      authFetch(`${URL}/users`, {
         method: 'GET',
         headers: defaultHeaders
       }).then(handleErrors)
@@ -69,7 +65,7 @@ const api = {
   },
   rooms: {
     get: () =>
-      fetch(`${URL}/rooms`, {
+      authFetch(`${URL}/rooms`, {
         method: 'GET',
         headers: defaultHeaders
       }).then(handleErrors)
@@ -142,8 +138,7 @@ const api = {
           to.toISOString().split('T')[0]
         }&room=${room}&type=${type}`,
         {
-          method: 'GET',
-          headers: plotHeaders
+          method: 'GET'
         }
       ).then(handleBinaryFilesErrors)
   },
@@ -152,14 +147,13 @@ const api = {
       fetch(
         `${URL}/table?from=${from.toLocaleDateString()}&to=${to.toLocaleDateString()}&room=${room}&format=${format}`,
         {
-          method: 'GET',
-          headers: plotHeaders
+          method: 'GET'
         }
       ).then(handleBinaryFilesErrors)
   },
   auth: {
     post: ({ login, password }) =>
-      fetch(`${URL}/auth`, {
+      fetch(`${URL}/login`, {
         method: 'POST',
         headers: defaultHeaders,
         body: JSON.stringify({

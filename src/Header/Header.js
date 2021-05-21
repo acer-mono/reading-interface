@@ -7,6 +7,7 @@ import UserForm from '../UserForm/UserForm';
 import RoomForm from '../RoomForm/RoomForm';
 import { useHistory } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   setCreate,
@@ -17,6 +18,7 @@ import {
   setTableStatus,
   setUserStatus
 } from '../redux/actions/status';
+import { logout } from '../auth';
 
 const useStyles = makeStyles(() => ({
   appBar: {
@@ -149,6 +151,9 @@ function Header() {
             Помещение
           </MenuItem>
         </Menu>
+        <IconButton onClick={() => logout()}>
+          <ExitToAppIcon style={{ color: 'white' }} fontSize="large" />
+        </IconButton>
       </Toolbar>
     </AppBar>
   );

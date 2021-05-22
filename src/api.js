@@ -32,7 +32,7 @@ const api = {
   },
   user: {
     post: ({ login, password, isAdmin }) =>
-      fetch(`${URL}/user`, {
+      authFetch(`${URL}/user`, {
         method: 'POST',
         headers: defaultHeaders,
         body: JSON.stringify({
@@ -43,7 +43,7 @@ const api = {
       }).then(handleErrors),
 
     put: ({ id, login, password, isAdmin }) =>
-      fetch(`${URL}/user`, {
+      authFetch(`${URL}/user`, {
         method: 'PUT',
         headers: defaultHeaders,
         body: JSON.stringify({
@@ -55,7 +55,7 @@ const api = {
       }).then(handleErrors),
 
     delete: id =>
-      fetch(`${URL}/user`, {
+      authFetch(`${URL}/user`, {
         method: 'DELETE',
         headers: defaultHeaders,
         body: JSON.stringify({
@@ -72,7 +72,7 @@ const api = {
   },
   room: {
     post: name =>
-      fetch(`${URL}/room`, {
+      authFetch(`${URL}/room`, {
         method: 'POST',
         headers: defaultHeaders,
         body: JSON.stringify({
@@ -80,7 +80,7 @@ const api = {
         })
       }).then(handleErrors),
     put: ({ id, name }) =>
-      fetch(`${URL}/room`, {
+      authFetch(`${URL}/room`, {
         method: 'PUT',
         headers: defaultHeaders,
         body: JSON.stringify({
@@ -89,7 +89,7 @@ const api = {
         })
       }).then(handleErrors),
     delete: id =>
-      fetch(`${URL}/room`, {
+      authFetch(`${URL}/room`, {
         method: 'DELETE',
         headers: defaultHeaders,
         body: JSON.stringify({
@@ -99,12 +99,12 @@ const api = {
   },
   reading: {
     get: room =>
-      fetch(`${URL}/reading?room=${room}`, {
+      authFetch(`${URL}/reading?room=${room}`, {
         method: 'GET',
         headers: defaultHeaders
       }).then(handleErrors),
     post: ({ temperature, humidity, room }) =>
-      fetch(`${URL}/reading`, {
+      authFetch(`${URL}/reading`, {
         method: 'POST',
         headers: defaultHeaders,
         body: JSON.stringify({
@@ -114,7 +114,7 @@ const api = {
         })
       }).then(handleErrors),
     put: ({ temperature, humidity, room }) =>
-      fetch(`${URL}/reading`, {
+      authFetch(`${URL}/reading`, {
         method: 'PUT',
         headers: defaultHeaders,
         body: JSON.stringify({
@@ -126,14 +126,14 @@ const api = {
   },
   readings: {
     get: (room, from, to) =>
-      fetch(`${URL}/readings?from=${from}&to=${to}&room=${room}`, {
+      authFetch(`${URL}/readings?from=${from}&to=${to}&room=${room}`, {
         method: 'GET',
         headers: defaultHeaders
       }).then(handleErrors)
   },
   plot: {
     get: ({ from, to, room, type }) =>
-      fetch(
+      authFetch(
         `${URL}/plot?from=${from.toISOString().split('T')[0]}&to=${
           to.toISOString().split('T')[0]
         }&room=${room}&type=${type}`,
@@ -144,7 +144,7 @@ const api = {
   },
   table: {
     get: ({ format, from, to, room }) =>
-      fetch(
+      authFetch(
         `${URL}/table?from=${from.toLocaleDateString()}&to=${to.toLocaleDateString()}&room=${room}&format=${format}`,
         {
           method: 'GET'

@@ -31,9 +31,11 @@ function Entity({ item, fieldForRendering, deleteHandler, updateHandler }) {
         <IconButton edge="end" aria-label="delete" onClick={() => setOpen(true)}>
           <EditIcon />
         </IconButton>
-        <IconButton edge="end" aria-label="delete" onClick={() => deleteHandler(item.id)}>
-          <DeleteIcon />
-        </IconButton>
+        {item.readings.length === 0 && (
+          <IconButton edge="end" aria-label="delete" onClick={() => deleteHandler(item.id)}>
+            <DeleteIcon />
+          </IconButton>
+        )}
       </ListItemSecondaryAction>
     </ListItem>
   );

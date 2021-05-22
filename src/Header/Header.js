@@ -105,17 +105,9 @@ function Header() {
           onClose={() => dispatch(setCreate(null))}
         >
           <MenuItem onClick={handleClickUserCreation}>Пользователь</MenuItem>
-          <UserForm
-            isCreation={true}
-            open={user}
-            changeHandler={value => dispatch(setUserStatus(value))}
-          />
+          <UserForm isCreation={true} open={Boolean(user)} />
           <MenuItem onClick={handleClickRoomCreation}>Помещение</MenuItem>
-          <RoomForm
-            isCreation={true}
-            open={room}
-            changeHandler={value => dispatch(setRoomStatus(value))}
-          />
+          <RoomForm isCreation={true} open={Boolean(room)} />
         </Menu>
         <Button
           classes={{

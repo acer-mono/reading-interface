@@ -1,4 +1,5 @@
 import api from '../../api';
+import { setUserStatus } from './status';
 
 export const usersActionTypes = {
   edit: 'users/edit',
@@ -43,8 +44,10 @@ export const editAsync = value => async dispatch => {
     dispatch(clearError());
     await api.user.put(value);
     dispatch(edit(value));
+    dispatch(setUserStatus(false));
   } catch (e) {
     dispatch(setError(e.message));
+    dispatch(setUserStatus(true));
   }
 };
 
@@ -53,8 +56,10 @@ export const addAsync = name => async dispatch => {
     dispatch(clearError());
     const item = await api.user.post(name);
     dispatch(add(item));
+    dispatch(setUserStatus(false));
   } catch (e) {
     dispatch(setError(e.message));
+    dispatch(setUserStatus(true));
   }
 };
 

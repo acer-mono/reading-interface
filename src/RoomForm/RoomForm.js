@@ -11,6 +11,7 @@ import * as yup from 'yup';
 import Alert from '@material-ui/lab/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { addAsync, editAsync } from '../redux/actions/rooms';
+import { setRoomStatus } from '../redux/actions/status';
 
 const useStyles = makeStyles(theme => ({
   buttons: {
@@ -25,7 +26,7 @@ const validationSchema = yup.object({
   name: yup.string('Введите название помещения').required('Название не может быт пустым')
 });
 
-function RoomForm({ open, isCreation, room, changeHandler }) {
+function RoomForm({ open, isCreation, room }) {
   const dispatch = useDispatch();
   const error = useSelector(store => store.rooms.error);
   const styles = useStyles();
@@ -39,9 +40,6 @@ function RoomForm({ open, isCreation, room, changeHandler }) {
         dispatch(addAsync(values.name));
       } else {
         dispatch(editAsync({ id: room.id, name: values.name }));
-      }
-      if (!useSelector(store => store.rooms.error)) {
-        changeHandler();
       }
     }
   });
@@ -71,7 +69,7 @@ function RoomForm({ open, isCreation, room, changeHandler }) {
             />
           </DialogContent>
           <DialogActions className={styles.buttons}>
-            <Button color="primary" onClick={() => changeHandler(false)}>
+            <Button color="primary" onClick={() => dispatch(setRoomStatus(false))}>
               Отмена
             </Button>
             <Button variant="contained" color="primary" type="submit">

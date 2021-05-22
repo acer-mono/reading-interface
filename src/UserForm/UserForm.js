@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -11,8 +11,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addAsync, editAsync } from '../redux/actions/users';
+import { setUserStatus } from '../redux/actions/status';
 
 const validationSchema = yup.object({
   login: yup.string('Введите логин').required('Логин обязателен'),
@@ -32,8 +33,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function UserForm({ open, changeHandler, isCreation, user }) {
-  const [error, setError] = useState('');
+function UserForm({ open, isCreation, user }) {
+  const error = useSelector(store => store.users.error);
   const styles = useStyles();
   const dispatch = useDispatch();
   const formik = useFormik({
@@ -44,7 +45,6 @@ function UserForm({ open, changeHandler, isCreation, user }) {
     },
     validationSchema: validationSchema,
     onSubmit: values => {
-      setError('');
       if (isCreation) {
         dispatch(addAsync({ ...values }));
       } else {
@@ -106,8 +106,7 @@ function UserForm({ open, changeHandler, isCreation, user }) {
             <Button
               color="primary"
               onClick={() => {
-                changeHandler(false);
-                setError('');
+                dispatch(setUserStatus(false));
               }}
             >
               Отмена

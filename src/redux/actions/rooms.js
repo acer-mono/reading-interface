@@ -1,4 +1,5 @@
 import api from '../../api';
+import { setRoomStatus } from './status';
 
 export const roomsActionTypes = {
   edit: 'rooms/edit',
@@ -43,8 +44,10 @@ export const editAsync = value => async dispatch => {
     dispatch(clearError());
     await api.room.put(value);
     dispatch(edit(value));
+    dispatch(setRoomStatus(false));
   } catch (e) {
     dispatch(setError(e.message));
+    dispatch(setRoomStatus(true));
   }
 };
 
@@ -53,8 +56,10 @@ export const addAsync = name => async dispatch => {
     dispatch(clearError());
     const item = await api.room.post(name);
     dispatch(add(item));
+    dispatch(setRoomStatus(false));
   } catch (e) {
     dispatch(setError(e.message));
+    dispatch(setRoomStatus(true));
   }
 };
 

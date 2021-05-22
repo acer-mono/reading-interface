@@ -18,23 +18,9 @@ function Entity({ item, fieldForRendering, deleteHandler, updateHandler }) {
   return (
     <ListItem>
       {fieldForRendering === 'login' && (
-        <UserForm
-          isCreation={false}
-          user={item}
-          open={open}
-          changeHandler={value => setOpen(value)}
-          updateHandler={updateHandler}
-        />
+        <UserForm isCreation={false} user={item} open={open} updateHandler={updateHandler} />
       )}
-      {fieldForRendering === 'name' && (
-        <RoomForm
-          isCreation={false}
-          room={item}
-          open={open}
-          changeHandler={value => setOpen(value)}
-          updateHandler={updateHandler}
-        />
-      )}
+      {fieldForRendering === 'name' && <RoomForm isCreation={false} room={item} open={open} />}
       <ListItemAvatar>
         <Avatar>
           <PersonIcon />

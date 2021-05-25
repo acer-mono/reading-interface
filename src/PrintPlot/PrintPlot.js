@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -11,8 +11,9 @@ import DateFnsUtils from '@date-io/date-fns';
 import api from '../api';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Alert from '@material-ui/lab/Alert/Alert';
+import { loadAsync } from '../redux/actions/rooms';
 
 const useStyles = makeStyles(theme => ({
   buttons: {
@@ -41,6 +42,7 @@ function PrintPlot({ open, changeState }) {
   const [error, setError] = useState('');
   const download = useRef();
   const rooms = useSelector(store => store.rooms.list);
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
       type: '',
@@ -64,6 +66,11 @@ function PrintPlot({ open, changeState }) {
         .catch(e => setError(e.message));
     }
   });
+
+  useEffect(() => {
+    dispatch(loadAsync());
+  }, []);
+
   return (
     <div>
       <Dialog aria-labelledby="form-dialog-title" open={open}>

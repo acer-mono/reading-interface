@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Typography, Paper, Stepper, StepLabel, Step, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import CurrentReadingView from '../CurrentReadingView/CurrentReadingView';
 import ChooseRoomView from '../ChooseRoomView/ChooseRoomView';
 import api from '../../api';
 import moment from 'moment';
-import { useDispatch, useSelector } from 'react-redux';
-import { loadAsync } from '../../redux/actions/rooms';
 
 const useStyles = makeStyles(theme => ({
   layout: {
@@ -38,8 +36,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function MainPage() {
-  const dispatch = useDispatch();
-  const rooms = useSelector(store => store.rooms.list);
   const classes = useStyles();
   const steps = ['Выбор помещения', 'Ввод данных'];
   const [roomId, setRoomId] = useState('');
@@ -48,10 +44,6 @@ function MainPage() {
   const [humidity, setHumidity] = useState([]);
 
   const [activeStep, setActiveStep] = React.useState(0);
-
-  useEffect(() => {
-    dispatch(loadAsync());
-  });
 
   const handleNext = () => {
     console.log(roomId);
@@ -92,7 +84,6 @@ function MainPage() {
       case 0:
         return (
           <ChooseRoomView
-            rooms={rooms}
             setRoomHandler={room => {
               setRoomId(room.target.value);
               setCurrent(undefined);

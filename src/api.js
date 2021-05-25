@@ -31,6 +31,12 @@ const api = {
       }).then(handleErrors)
   },
   user: {
+    get: () =>
+      authFetch(`${URL}/user`, {
+        method: 'GET',
+        headers: defaultHeaders
+      }).then(handleErrors),
+
     post: ({ login, password, isAdmin }) =>
       authFetch(`${URL}/user`, {
         method: 'POST',

@@ -38,6 +38,7 @@ function Header() {
   const history = useHistory();
   const dispatch = useDispatch();
   const { room, user, table, plot, create, print, edit } = useSelector(store => store.status);
+  const currentUser = useSelector(store => store.currentUser.user);
 
   const handleClickOpenPrintPlot = () => {
     dispatch(setPrint(null));
@@ -87,62 +88,66 @@ function Header() {
           <MenuItem onClick={handleClickOpenPrintPlot}>График</MenuItem>
           <PrintPlot open={plot} changeState={value => dispatch(setPlotStatus(value))} />
         </Menu>
-        <Button
-          classes={{
-            root: classes.menuButton
-          }}
-          aria-controls="simple-menu"
-          aria-haspopup="true"
-          onClick={event => dispatch(setCreate(event.currentTarget))}
-        >
-          Создание
-        </Button>
-        <Menu
-          id="simple-menu"
-          anchorEl={create}
-          keepMounted
-          open={Boolean(create)}
-          onClose={() => dispatch(setCreate(null))}
-        >
-          <MenuItem onClick={handleClickUserCreation}>Пользователь</MenuItem>
-          <UserForm isCreation={true} open={Boolean(user)} />
-          <MenuItem onClick={handleClickRoomCreation}>Помещение</MenuItem>
-          <RoomForm isCreation={true} open={Boolean(room)} />
-        </Menu>
-        <Button
-          classes={{
-            root: classes.menuButton
-          }}
-          aria-controls="simple-menu"
-          aria-haspopup="true"
-          onClick={event => dispatch(setEdit(event.currentTarget))}
-        >
-          Редактирование
-        </Button>
-        <Menu
-          id="simple-menu"
-          anchorEl={edit}
-          keepMounted
-          open={Boolean(edit)}
-          onClose={() => dispatch(setEdit(null))}
-        >
-          <MenuItem
-            onClick={useCallback(() => {
-              dispatch(setEdit(null));
-              history.push('/users');
-            }, [history])}
-          >
-            Пользователь
-          </MenuItem>
-          <MenuItem
-            onClick={useCallback(() => {
-              dispatch(setEdit(null));
-              history.push('/rooms');
-            }, [history])}
-          >
-            Помещение
-          </MenuItem>
-        </Menu>
+        {currentUser.isAdmin && (
+          <>
+            <Button
+              classes={{
+                root: classes.menuButton
+              }}
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              onClick={event => dispatch(setCreate(event.currentTarget))}
+            >
+              Создание
+            </Button>
+            <Menu
+              id="simple-menu"
+              anchorEl={create}
+              keepMounted
+              open={Boolean(create)}
+              onClose={() => dispatch(setCreate(null))}
+            >
+              <MenuItem onClick={handleClickUserCreation}>Пользователь</MenuItem>
+              <UserForm isCreation={true} open={Boolean(user)} />
+              <MenuItem onClick={handleClickRoomCreation}>Помещение</MenuItem>
+              <RoomForm isCreation={true} open={Boolean(room)} />
+            </Menu>
+            <Button
+              classes={{
+                root: classes.menuButton
+              }}
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              onClick={event => dispatch(setEdit(event.currentTarget))}
+            >
+              Редактирование
+            </Button>
+            <Menu
+              id="simple-menu"
+              anchorEl={edit}
+              keepMounted
+              open={Boolean(edit)}
+              onClose={() => dispatch(setEdit(null))}
+            >
+              <MenuItem
+                onClick={useCallback(() => {
+                  dispatch(setEdit(null));
+                  history.push('/users');
+                }, [history])}
+              >
+                Пользователь
+              </MenuItem>
+              <MenuItem
+                onClick={useCallback(() => {
+                  dispatch(setEdit(null));
+                  history.push('/rooms');
+                }, [history])}
+              >
+                Помещение
+              </MenuItem>
+            </Menu>
+          </>
+        )}
         <IconButton onClick={() => logout()}>
           <ExitToAppIcon style={{ color: 'white' }} fontSize="large" />
         </IconButton>

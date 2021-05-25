@@ -5,6 +5,7 @@ import CurrentReadingView from '../CurrentReadingView/CurrentReadingView';
 import ChooseRoomView from '../ChooseRoomView/ChooseRoomView';
 import api from '../../api';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   layout: {
@@ -35,7 +36,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function MainPage({ rooms }) {
+function MainPage() {
+  const rooms = useSelector(store => store.rooms.list);
   const classes = useStyles();
   const steps = ['Выбор помещения', 'Ввод данных'];
   const [roomId, setRoomId] = useState('');

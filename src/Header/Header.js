@@ -130,18 +130,18 @@ function Header() {
               onClose={() => dispatch(setEdit(null))}
             >
               <MenuItem
-                onClick={useCallback(() => {
+                onClick={() => {
                   dispatch(setEdit(null));
                   history.push('/users');
-                }, [history])}
+                }}
               >
                 Пользователь
               </MenuItem>
               <MenuItem
-                onClick={useCallback(() => {
+                onClick={() => {
                   dispatch(setEdit(null));
                   history.push('/rooms');
-                }, [history])}
+                }}
               >
                 Помещение
               </MenuItem>

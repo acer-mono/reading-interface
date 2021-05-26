@@ -40,7 +40,7 @@ function UserForm({ open, isCreation, user }) {
   const formik = useFormik({
     initialValues: {
       login: user ? user.login : '',
-      password: user ? user.password : '',
+      password: '',
       isAdmin: user ? user.isAdmin : ''
     },
     validationSchema: validationSchema,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import MainPage from './views/MainPage/MainPage';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
@@ -7,9 +7,16 @@ import LoginForm from './LoginForm/LoginForm';
 import { useAuth } from './auth';
 import { RoomsView } from './views/RoomsView/RoomsView';
 import { UsersView } from './views/UsersView/UsersView';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserAsync } from './redux/actions/currentUser';
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUserAsync());
+  }, []);
+
   return (
     <Router>
       <Switch>
@@ -32,6 +39,11 @@ function App() {
 
 export const PrivateRoute = ({ component: Component, ...rest }) => {
   const [logged] = useAuth();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUserAsync());
+  }, []);
 
   return (
     <Route
@@ -50,6 +62,11 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
 export const PrivateAdminRoute = ({ component: Component, ...rest }) => {
   const [logged] = useAuth();
   const user = useSelector(store => store.currentUser.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUserAsync());
+  }, []);
 
   return (
     <Route

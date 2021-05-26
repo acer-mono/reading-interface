@@ -12,6 +12,7 @@ import Alert from '@material-ui/lab/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { addAsync, editAsync } from '../redux/actions/rooms';
 import { setRoomStatus } from '../redux/actions/status';
+import { closeRoom } from '../redux/actions/editForms';
 
 const useStyles = makeStyles(theme => ({
   buttons: {
@@ -69,7 +70,16 @@ function RoomForm({ open, isCreation, room }) {
             />
           </DialogContent>
           <DialogActions className={styles.buttons}>
-            <Button color="primary" onClick={() => dispatch(setRoomStatus(false))}>
+            <Button
+              color="primary"
+              onClick={() => {
+                if (isCreation) {
+                  dispatch(setRoomStatus(false));
+                } else {
+                  dispatch(closeRoom());
+                }
+              }}
+            >
               Отмена
             </Button>
             <Button variant="contained" color="primary" type="submit">

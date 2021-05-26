@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   ListItem,
   ListItemText,
@@ -12,15 +12,26 @@ import EditIcon from '@material-ui/icons/Edit';
 import PersonIcon from '@material-ui/icons/Person';
 import UserForm from '../UserForm/UserForm';
 import RoomForm from '../RoomForm/RoomForm';
+import { useDispatch, useSelector } from 'react-redux';
+import { openRoom, openUser } from '../redux/actions/editForms';
 
 function Entity({ item, fieldForRendering, deleteHandler, updateHandler }) {
-  const [open, setOpen] = useState();
+  const dispatch = useDispatch();
+  const isEditUserOpen = useSelector(store => store.editForms.user);
+  const isEditRoomOpen = useSelector(store => store.editForms.room);
   return (
     <ListItem>
       {fieldForRendering === 'login' && (
-        <UserForm isCreation={false} user={item} open={open} updateHandler={updateHandler} />
+        <UserForm
+          isCreation={false}
+          user={item}
+          open={isEditUserOpen === item.id}
+          updateHandler={updateHandler}
+        />
       )}
-      {fieldForRendering === 'name' && <RoomForm isCreation={false} room={item} open={open} />}
+      {fieldForRendering === 'name' && (
+        <RoomForm isCreation={false} room={item} open={isEditRoomOpen === item.id} />
+      )}
       <ListItemAvatar>
         <Avatar>
           <PersonIcon />
@@ -28,9 +39,16 @@ function Entity({ item, fieldForRendering, deleteHandler, updateHandler }) {
       </ListItemAvatar>
       <ListItemText primary={item[fieldForRendering]} />
       <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="delete" onClick={() => setOpen(true)}>
-          <EditIcon />
-        </IconButton>
+        {fieldForRendering === 'login' && (
+          <IconButton edge="end" aria-label="delete" onClick={() => dispatch(openUser(item.id))}>
+            <EditIcon />
+          </IconButton>
+        )}
+        {fieldForRendering === 'name' && (
+          <IconButton edge="end" aria-label="delete" onClick={() => dispatch(openRoom(item.id))}>
+            <EditIcon />
+          </IconButton>
+        )}
         {item.readings.length === 0 && (
           <IconButton edge="end" aria-label="delete" onClick={() => deleteHandler(item.id)}>
             <DeleteIcon />

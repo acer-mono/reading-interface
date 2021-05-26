@@ -1,5 +1,6 @@
 import api from '../../api';
 import { setRoomStatus } from './status';
+import { closeRoom } from './editForms';
 
 export const roomsActionTypes = {
   edit: 'rooms/edit',
@@ -44,10 +45,9 @@ export const editAsync = value => async dispatch => {
     dispatch(clearError());
     await api.room.put(value);
     dispatch(edit(value));
-    dispatch(setRoomStatus(false));
+    dispatch(closeRoom());
   } catch (e) {
     dispatch(setError(e.message));
-    dispatch(setRoomStatus(true));
   }
 };
 

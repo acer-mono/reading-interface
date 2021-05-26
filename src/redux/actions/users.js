@@ -1,5 +1,6 @@
 import api from '../../api';
 import { setUserStatus } from './status';
+import { closeUser } from './editForms';
 
 export const usersActionTypes = {
   edit: 'users/edit',
@@ -44,10 +45,9 @@ export const editAsync = value => async dispatch => {
     dispatch(clearError());
     await api.user.put(value);
     dispatch(edit(value));
-    dispatch(setUserStatus(false));
+    dispatch(closeUser());
   } catch (e) {
     dispatch(setError(e.message));
-    dispatch(setUserStatus(true));
   }
 };
 

@@ -14,6 +14,7 @@ import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { addAsync, editAsync } from '../redux/actions/users';
 import { setUserStatus } from '../redux/actions/status';
+import { closeUser } from '../redux/actions/editForms';
 
 const validationSchema = yup.object({
   login: yup.string('Введите логин').required('Логин обязателен'),
@@ -106,7 +107,11 @@ function UserForm({ open, isCreation, user }) {
             <Button
               color="primary"
               onClick={() => {
-                dispatch(setUserStatus(false));
+                if (isCreation) {
+                  dispatch(setUserStatus(false));
+                } else {
+                  dispatch(closeUser());
+                }
               }}
             >
               Отмена

@@ -27,7 +27,7 @@ export function roomsReducer(state = roomsInitialStore, action) {
         list: [
           ...state.list.map(item => {
             if (item.id === action.payload.id) {
-              item = action.payload;
+              item.name = action.payload.name;
             }
             return item;
           })

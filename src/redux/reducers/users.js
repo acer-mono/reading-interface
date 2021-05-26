@@ -27,7 +27,8 @@ export function usersReducer(state = usersInitialStore, action) {
         list: [
           ...state.list.map(item => {
             if (item.id === action.payload.id) {
-              item = action.payload;
+              item.login = action.payload.login;
+              item.isAdmin = action.payload.isAdmin;
             }
             return item;
           })

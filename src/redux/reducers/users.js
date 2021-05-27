@@ -1,53 +1,36 @@
-import { usersActionTypes } from '../actions/users';
+import { createSlice } from '@reduxjs/toolkit';
 
-export const usersInitialStore = {
-  list: []
+const initialState = {
+  list: [],
+  error: ''
 };
 
-export function usersReducer(state = usersInitialStore, action) {
-  switch (action.type) {
-    case usersActionTypes.loadList: {
+const usersSlice = createSlice({
+  name: 'users',
+  initialState,
+  reducers: {
+    loadList(state, action) {
       return { ...state, list: action.payload };
+    },
+    remove(state, action) {
+      state.list = [...state.list.filter(el => el.id !== action.payload)];
+    },
+    add(state, action) {
+      state.list.push(action.payload);
+    },
+    edit(state, action) {
+      const room = state.list.find(room => room.id === action.payload.id);
+      room.login = action.payload.login;
+    },
+    clearError(state) {
+      state.error = '';
+    },
+    setError(state, action) {
+      state.error = action.payload;
     }
-    case usersActionTypes.delete: {
-      return {
-        ...state,
-        list: [...state.list.filter(el => el.id !== action.payload)]
-      };
-    }
-    case usersActionTypes.add: {
-      return {
-        ...state,
-        list: [...state.list, action.payload]
-      };
-    }
-    case usersActionTypes.edit: {
-      return {
-        ...state,
-        list: [
-          ...state.list.map(item => {
-            if (item.id === action.payload.id) {
-              item.login = action.payload.login;
-              item.isAdmin = action.payload.isAdmin;
-            }
-            return item;
-          })
-        ]
-      };
-    }
-    case usersActionTypes.clearError: {
-      return {
-        ...state,
-        error: ''
-      };
-    }
-    case usersActionTypes.setError: {
-      return {
-        ...state,
-        error: action.payload
-      };
-    }
-    default:
-      return state;
   }
-}
+});
+
+export const { loadList, remove, edit, setError, clearError, add } = usersSlice.actions;
+
+export default usersSlice.reducer;

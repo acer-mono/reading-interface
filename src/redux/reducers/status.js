@@ -1,6 +1,6 @@
-import { statusActionTypes } from '../actions/status';
+import { createSlice } from '@reduxjs/toolkit';
 
-export const statusInitialStore = {
+const initialState = {
   user: false,
   room: false,
   plot: false,
@@ -10,30 +10,42 @@ export const statusInitialStore = {
   edit: false
 };
 
-export function statusReducer(state = statusInitialStore, action) {
-  switch (action.type) {
-    case statusActionTypes.setPlotStatus: {
-      return { ...state, plot: action.payload };
+const statusSlice = createSlice({
+  name: 'status',
+  initialState,
+  reducers: {
+    setPlotStatus(state, action) {
+      state.plot = action.payload;
+    },
+    setTableStatus(state, action) {
+      state.table = action.payload;
+    },
+    setRoomStatus(state, action) {
+      state.room = action.payload;
+    },
+    setUserStatus(state, action) {
+      state.user = action.payload;
+    },
+    setCreate(state, action) {
+      state.create = action.payload;
+    },
+    setPrint(state, action) {
+      state.print = action.payload;
+    },
+    setEdit(state, action) {
+      state.edit = action.payload;
     }
-    case statusActionTypes.setTableStatus: {
-      return { ...state, table: action.payload };
-    }
-    case statusActionTypes.setRoomStatus: {
-      return { ...state, room: action.payload };
-    }
-    case statusActionTypes.setUserStatus: {
-      return { ...state, user: action.payload };
-    }
-    case statusActionTypes.setCreate: {
-      return { ...state, create: action.payload };
-    }
-    case statusActionTypes.setPrint: {
-      return { ...state, print: action.payload };
-    }
-    case statusActionTypes.setEdit: {
-      return { ...state, edit: action.payload };
-    }
-    default:
-      return state;
   }
-}
+});
+
+export const {
+  setPlotStatus,
+  setTableStatus,
+  setRoomStatus,
+  setUserStatus,
+  setCreate,
+  setPrint,
+  setEdit
+} = statusSlice.actions;
+
+export default statusSlice.reducer;

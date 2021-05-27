@@ -11,8 +11,8 @@ import * as yup from 'yup';
 import Alert from '@material-ui/lab/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { addAsync, editAsync } from '../redux/actions/rooms';
-import { setRoomStatus } from '../redux/actions/status';
-import { closeRoom } from '../redux/actions/editForms';
+import { setRoomStatus } from '../redux/reducers/status';
+import { closeRoom } from '../redux/reducers/editForms';
 
 const useStyles = makeStyles(theme => ({
   buttons: {

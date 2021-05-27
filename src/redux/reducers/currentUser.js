@@ -1,15 +1,19 @@
-import { currentUserActionTypes } from '../actions/currentUser';
+import { createSlice } from '@reduxjs/toolkit';
 
-export const currentUserInitialStore = {
+const initialState = {
   user: {}
 };
 
-export function currentUserReducer(state = currentUserInitialStore, action) {
-  switch (action.type) {
-    case currentUserActionTypes.get: {
-      return { ...state, user: action.payload };
+const currentUserSlice = createSlice({
+  name: 'currentUser',
+  initialState,
+  reducers: {
+    get(state, action) {
+      state.user = action.payload;
     }
-    default:
-      return state;
   }
-}
+});
+
+export const { get } = currentUserSlice.actions;
+
+export default currentUserSlice.reducer;

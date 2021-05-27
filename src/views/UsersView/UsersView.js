@@ -4,7 +4,7 @@ import {
   loadAsync as usersLoadAsync,
   removeAsync as usersRemoveAsync
 } from '../../redux/actions/users';
-import { edit as userEdit } from '../../redux/actions/rooms';
+import { edit as userEdit } from '../../redux/reducers/rooms';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 

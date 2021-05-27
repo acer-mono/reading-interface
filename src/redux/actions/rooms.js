@@ -1,44 +1,7 @@
 import api from '../../api';
-import { setRoomStatus } from './status';
-import { closeRoom } from './editForms';
-
-export const roomsActionTypes = {
-  edit: 'rooms/edit',
-  add: 'rooms/add',
-  delete: 'rooms/delete',
-  loadList: 'rooms/load',
-  setError: 'rooms/setError',
-  clearError: 'rooms/clearError'
-};
-
-export const setError = error => ({
-  type: roomsActionTypes.setError,
-  payload: error
-});
-
-export const clearError = () => ({
-  type: roomsActionTypes.clearError
-});
-
-export const load = list => ({
-  type: roomsActionTypes.loadList,
-  payload: list
-});
-
-export const remove = id => ({
-  type: roomsActionTypes.delete,
-  payload: id
-});
-
-export const edit = item => ({
-  type: roomsActionTypes.edit,
-  payload: item
-});
-
-export const add = room => ({
-  type: roomsActionTypes.add,
-  payload: room
-});
+import { setRoomStatus } from '../reducers/status';
+import { closeRoom } from '../reducers/editForms';
+import { clearError, setError, edit, loadList, remove, add } from '../reducers/rooms';
 
 export const editAsync = value => async dispatch => {
   try {
@@ -66,7 +29,7 @@ export const addAsync = name => async dispatch => {
 export const loadAsync = () => async dispatch => {
   try {
     const list = await api.rooms.get();
-    dispatch(load(list));
+    dispatch(loadList(list));
   } catch (e) {
     console.log('Error load');
   }

@@ -1,45 +1,7 @@
 import api from '../../api';
-import { setUserStatus } from './status';
-import { closeUser } from './editForms';
-
-export const usersActionTypes = {
-  edit: 'users/edit',
-  add: 'users/add',
-  delete: 'users/delete',
-  loadList: 'users/load',
-  setError: 'users/setError',
-  clearError: 'users/clearError'
-};
-
-export const setError = error => ({
-  type: usersActionTypes.setError,
-  payload: error
-});
-
-export const clearError = () => ({
-  type: usersActionTypes.clearError
-});
-
-export const load = list => ({
-  type: usersActionTypes.loadList,
-  payload: list
-});
-
-export const remove = id => ({
-  type: usersActionTypes.delete,
-  payload: id
-});
-
-export const edit = item => ({
-  type: usersActionTypes.edit,
-  payload: item
-});
-
-export const add = room => ({
-  type: usersActionTypes.add,
-  payload: room
-});
-
+import { setUserStatus } from '../reducers/status';
+import { closeUser } from '../reducers/editForms';
+import { clearError, setError, edit, loadList, remove, add } from '../reducers/users';
 export const editAsync = value => async dispatch => {
   try {
     dispatch(clearError());
@@ -66,7 +28,7 @@ export const addAsync = name => async dispatch => {
 export const loadAsync = () => async dispatch => {
   try {
     const list = await api.users.get();
-    dispatch(load(list));
+    dispatch(loadList(list));
   } catch (e) {
     console.log('Error load');
   }

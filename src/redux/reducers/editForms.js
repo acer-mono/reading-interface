@@ -1,25 +1,29 @@
-import { editFormsActionTypes } from '../actions/editForms';
+import { createSlice } from '@reduxjs/toolkit';
 
-export const editFormsInitialStore = {
+const initialState = {
   user: '',
   room: ''
 };
 
-export function editFormsReducer(state = editFormsInitialStore, action) {
-  switch (action.type) {
-    case editFormsActionTypes.openUser: {
-      return { ...state, user: action.payload };
+const editFormSlice = createSlice({
+  name: 'editForms',
+  initialState,
+  reducers: {
+    openUser(state, action) {
+      state.user = action.payload;
+    },
+    closeUser(state) {
+      state.user = '';
+    },
+    openRoom(state, action) {
+      state.room = action.payload;
+    },
+    closeRoom(state) {
+      state.room = '';
     }
-    case editFormsActionTypes.closeUser: {
-      return { ...state, user: '' };
-    }
-    case editFormsActionTypes.openRoom: {
-      return { ...state, room: action.payload };
-    }
-    case editFormsActionTypes.closeRoom: {
-      return { ...state, room: '' };
-    }
-    default:
-      return state;
   }
-}
+});
+
+export const { openUser, closeUser, openRoom, closeRoom } = editFormSlice.actions;
+
+export default editFormSlice.reducer;

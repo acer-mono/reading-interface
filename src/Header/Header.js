@@ -17,7 +17,7 @@ import {
   setRoomStatus,
   setTableStatus,
   setUserStatus
-} from '../redux/actions/status';
+} from '../redux/reducers/status';
 import { logout } from '../auth';
 
 const useStyles = makeStyles(() => ({

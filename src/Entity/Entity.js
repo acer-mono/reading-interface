@@ -13,7 +13,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import UserForm from '../UserForm/UserForm';
 import RoomForm from '../RoomForm/RoomForm';
 import { useDispatch, useSelector } from 'react-redux';
-import { openRoom, openUser } from '../redux/actions/editForms';
+import { openRoom, openUser } from '../redux/reducers/editForms';
 
 function Entity({ item, fieldForRendering, deleteHandler, updateHandler }) {
   const dispatch = useDispatch();

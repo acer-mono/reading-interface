@@ -13,8 +13,8 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { addAsync, editAsync } from '../redux/actions/users';
-import { setUserStatus } from '../redux/actions/status';
-import { closeUser } from '../redux/actions/editForms';
+import { setUserStatus } from '../redux/reducers/status';
+import { closeUser } from '../redux/reducers/editForms';
 
 const validationSchema = yup.object({
   login: yup.string('Введите логин').required('Логин обязателен'),

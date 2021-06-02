@@ -1,6 +1,6 @@
 import React from 'react';
 import EntityListView from '../EntityListView/EntityListView';
-import { edit as roomEdit } from '../../redux/actions/users';
+import { edit as roomEdit } from '../../redux/reducers/users';
 import {
   loadAsync as roomLoadAsync,
   removeAsync as roomRemoveAsync

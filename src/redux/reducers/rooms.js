@@ -1,52 +1,36 @@
-import { roomsActionTypes } from '../actions/rooms';
+import { createSlice } from '@reduxjs/toolkit';
 
-export const roomsInitialStore = {
-  list: []
+const initialState = {
+  list: [],
+  error: ''
 };
 
-export function roomsReducer(state = roomsInitialStore, action) {
-  switch (action.type) {
-    case roomsActionTypes.loadList: {
+const roomsSlice = createSlice({
+  name: 'rooms',
+  initialState,
+  reducers: {
+    loadList(state, action) {
       return { ...state, list: action.payload };
+    },
+    remove(state, action) {
+      state.list = [...state.list.filter(el => el.id !== action.payload)];
+    },
+    add(state, action) {
+      state.list.push(action.payload);
+    },
+    edit(state, action) {
+      const room = state.list.find(room => room.id === action.payload.id);
+      room.name = action.payload.name;
+    },
+    clearError(state) {
+      state.error = '';
+    },
+    setError(state, action) {
+      state.error = action.payload;
     }
-    case roomsActionTypes.delete: {
-      return {
-        ...state,
-        list: [...state.list.filter(el => el.id !== action.payload)]
-      };
-    }
-    case roomsActionTypes.add: {
-      return {
-        ...state,
-        list: [...state.list, action.payload]
-      };
-    }
-    case roomsActionTypes.edit: {
-      return {
-        ...state,
-        list: [
-          ...state.list.map(item => {
-            if (item.id === action.payload.id) {
-              item.name = action.payload.name;
-            }
-            return item;
-          })
-        ]
-      };
-    }
-    case roomsActionTypes.clearError: {
-      return {
-        ...state,
-        error: ''
-      };
-    }
-    case roomsActionTypes.setError: {
-      return {
-        ...state,
-        error: action.payload
-      };
-    }
-    default:
-      return state;
   }
-}
+});
+
+export const { loadList, remove, edit, setError, clearError, add } = roomsSlice.actions;
+
+export default roomsSlice.reducer;

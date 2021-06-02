@@ -1,16 +1,19 @@
-import { roomsInitialStore } from './reducers/rooms';
-import { createStore, applyMiddleware } from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import createRootReducer from './reducers';
-import { usersInitialStore } from './reducers/users';
+import { configureStore } from '@reduxjs/toolkit';
 
-export const initialState = {
-  rooms: roomsInitialStore,
-  users: usersInitialStore
-};
+import statusSlice from './reducers/status';
+import currentUserSlice from './reducers/currentUser';
+import editFormsSlice from './reducers/editForms';
+import roomsSlice from './reducers/rooms';
+import usersSlice from './reducers/users';
 
-export const rootReducer = createRootReducer();
-
-const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
+const store = configureStore({
+  reducer: {
+    rooms: roomsSlice,
+    users: usersSlice,
+    status: statusSlice,
+    currentUser: currentUserSlice,
+    editForms: editFormsSlice
+  }
+});
 
 export default store;

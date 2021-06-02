@@ -63,7 +63,7 @@ function Header() {
   return (
     <AppBar position="absolute" color="primary" className={classes.appBar}>
       <Toolbar>
-        <IconButton onClick={useCallback(() => history.push('/'), [history])}>
+        <IconButton onClick={useCallback(() => history.push('/reading-interface'), [history])}>
           <HomeIcon style={{ color: 'white' }} fontSize="large" />
         </IconButton>
         <Button
@@ -132,7 +132,7 @@ function Header() {
               <MenuItem
                 onClick={() => {
                   dispatch(setEdit(null));
-                  history.push('/users');
+                  history.push('/reading-interface/users');
                 }}
               >
                 Пользователь
@@ -140,7 +140,7 @@ function Header() {
               <MenuItem
                 onClick={() => {
                   dispatch(setEdit(null));
-                  history.push('/rooms');
+                  history.push('/reading-interface/rooms');
                 }}
               >
                 Помещение

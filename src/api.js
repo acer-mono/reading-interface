@@ -1,6 +1,6 @@
 import { authFetch } from './auth';
 
-const URL = 'http://localhost:5000';
+const URL = 'https://vki.pythonanywhere.com';
 
 const defaultHeaders = {
   'Content-Type': 'application/json'

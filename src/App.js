@@ -20,16 +20,20 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route exact path="/login" component={() => <LoginForm />} />
-        <PrivateRoute exact path="/" component={() => <HeaderWrapper component={MainPage} />} />
+        <Route exact path="/reading-interface/login" component={() => <LoginForm />} />
+        <PrivateRoute
+          exact
+          path="/reading-interface"
+          component={() => <HeaderWrapper component={MainPage} />}
+        />
         <PrivateAdminRoute
           exact
-          path="/users"
+          path="/reading-interface/users"
           component={() => <HeaderWrapper component={UsersView} />}
         />
         <PrivateAdminRoute
           exact
-          path="/rooms"
+          path="/reading-interface/rooms"
           component={() => <HeaderWrapper component={RoomsView} />}
         />
       </Switch>
@@ -52,7 +56,9 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
         logged ? (
           <Component {...props} />
         ) : (
-          <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+          <Redirect
+            to={{ pathname: '/reading-interface/login', state: { from: props.location } }}
+          />
         )
       }
     />
@@ -75,7 +81,9 @@ export const PrivateAdminRoute = ({ component: Component, ...rest }) => {
         logged && user.isAdmin ? (
           <Component {...props} />
         ) : (
-          <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+          <Redirect
+            to={{ pathname: '/reading-interface/login', state: { from: props.location } }}
+          />
         )
       }
     />

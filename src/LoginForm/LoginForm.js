@@ -54,7 +54,7 @@ function LoginForm() {
         const data = await api.auth.post(values);
         if (data.access_token) {
           login(data);
-          history.push('/');
+          history.push('/reading-interface');
         } else {
           setError('Please type in correct username/password');
         }

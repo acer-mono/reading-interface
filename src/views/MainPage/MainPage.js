@@ -56,21 +56,24 @@ function MainPage() {
         setCurrent(undefined);
       })
       .finally(() => {
-        api.readings.get(roomId, new Date() - 7, new Date()).then(readings => {
-          setTemperature(
-            readings.map(reading => {
-              return {
-                date: moment(reading.date).format('DD.MM'),
-                temperature: reading.temperature
-              };
-            })
-          );
-          setHumidity(
-            readings.map(reading => {
-              return { date: moment(reading.date).format('DD.MM'), humidity: reading.humidity };
-            })
-          );
-        });
+        api.readings
+          .get(roomId, new Date(new Date().setDate(new Date().getDate() - 6)), new Date())
+          .then(readings => {
+            console.log(new Date().getDate() - 7);
+            setTemperature(
+              readings.map(reading => {
+                return {
+                  date: moment(reading.date).format('DD.MM'),
+                  temperature: reading.temperature
+                };
+              })
+            );
+            setHumidity(
+              readings.map(reading => {
+                return { date: moment(reading.date).format('DD.MM'), humidity: reading.humidity };
+              })
+            );
+          });
         setActiveStep(activeStep + 1);
       });
   };

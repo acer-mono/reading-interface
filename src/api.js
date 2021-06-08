@@ -132,10 +132,15 @@ const api = {
   },
   readings: {
     get: (room, from, to) =>
-      authFetch(`${URL}/readings?from=${from}&to=${to}&room=${room}`, {
-        method: 'GET',
-        headers: defaultHeaders
-      }).then(handleErrors)
+      authFetch(
+        `${URL}/readings?from=${from.toISOString().split('T')[0]}&to=${
+          to.toISOString().split('T')[0]
+        }&room=${room}`,
+        {
+          method: 'GET',
+          headers: defaultHeaders
+        }
+      ).then(handleErrors)
   },
   plot: {
     get: ({ from, to, room, type }) =>

@@ -151,7 +151,9 @@ const api = {
   table: {
     get: ({ format, from, to, room }) =>
       authFetch(
-        `${URL}/table?from=${from.toLocaleDateString()}&to=${to.toLocaleDateString()}&room=${room}&format=${format}`,
+        `${URL}/table?from=${from.toISOString().split('T')[0]}&to=${
+          to.toISOString().split('T')[0]
+        }&room=${room}&format=${format}`,
         {
           method: 'GET'
         }

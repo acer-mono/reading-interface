@@ -39,7 +39,9 @@ function EntityListView({ items, fieldForSearching, title, deleteHandler, update
           </Typography>
           <SearchString filterItems={changeFilterHandler} />
           <EntityList
-            items={items.filter(el => el[fieldForSearching].includes(filter))}
+            items={items.filter(el =>
+              el[fieldForSearching].toLowerCase().includes(filter.toLowerCase())
+            )}
             fieldForRendering={fieldForSearching}
             deleteHandler={deleteHandler}
             updateHandler={updateHandler}
